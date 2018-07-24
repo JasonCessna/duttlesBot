@@ -82,7 +82,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 					tempPlayerID = new Array();
 					tempPlayerTag = new Array();
 				}
-				// http://aligulac.com/api/v1/player/search/json/?q=Duttles&apikey=mI7ShQL8LhcHR4Cs5dck
 			break
 			case 'update':
 				bot.sendMessage({
@@ -298,10 +297,3 @@ function stateChange(newState) {
         }
     }, 5000);
 }
-
-/*
-
-LADDER LIST:
-https://us.api.battle.net/data/sc2/ladder/268754?locale=en_US&access_token=x39b6qjbfdjxug3eu6kak267
-
-*/
