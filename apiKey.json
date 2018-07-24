@@ -1,0 +1,21 @@
+{
+	"CLIENT_ID": "", 
+	"CLIENT_SECRET": "",
+	"REDIRECT_URI": "http://duttles.openode.io/",
+	"CHALLONGE_API_KEY": "",
+	"CHALLONGE_USERNAME": "",
+	"BNET_CLIENT_ID": "",
+	"BNET_API_KEY": "",
+	"BNET_CLIENT_SECRET": "",
+	"BNET_AUTH_CODE": "",
+	"BNET_ACCESS_TOKEN": "",
+	"ALIGULAC_API_KEY": "",
+	"SC2STATS_API_KEY": ";;",
+	"DISCORD_JOIN_URL": "https://discordapp.com/api/oauth2/authorize?client_id=&permissions=117760&response_type=code&scope=bot%20identify%20guilds%20webhook.incoming%20connections",
+	"LINKS": {
+		"BNET_LADDER": "https://us.api.battle.net/data/sc2/ladder/268754?locale=en_US&access_token=",
+		"BNET_CHECK_TOKEN": "/oauth/check_token?token=",
+		"API_ENDPOINT": "https://discordapp.com/api/v6",
+		"CHALLONGE_CALL": "https://api.challonge.com/v2/"
+		}
+}
