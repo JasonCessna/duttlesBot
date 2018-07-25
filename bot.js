@@ -1,9 +1,9 @@
 //CANNOT GET WINSTON TO WORK?
 
-var Discord = require('discord.io');
+const Discord = require('discord.io');
 //var logger = require('winston');
-var auth = require('./auth.json');
-var api = require('./apiKey.json');
+const auth = require('./auth.json');
+const api = require('./apiKey.json');
 const blizzard = require('blizzard.js').initialize({ apikey: api.BNET_API_KEY });
 const rp = require('request-promise');
 const cheerio = require('cheerio');
@@ -12,7 +12,8 @@ const https = require('https')
 const port = 3000
 const request = require('request')
 
-var fs = require('fs');
+
+const fs = require('fs');
 
 // include functions:
 eval(fs.readFileSync('./functions/aligulac.js')+'');
@@ -20,6 +21,8 @@ eval(fs.readFileSync('./functions/challonge.js')+'');
 eval(fs.readFileSync('./functions/sc2ReplayStats.js')+'');
 eval(fs.readFileSync('./functions/bNet.js')+'');
 eval(fs.readFileSync('./functions/setsAndGlobals.js')+'');
+eval(fs.readFileSync('./functions/OSC.js')+'');
+eval(fs.readFileSync('./functions/liquipedia.js')+'');
 	
 function webScrape(URI) {
 	var options = {
@@ -30,9 +33,6 @@ function webScrape(URI) {
 	};
 	return options;
 }
-var GoogleSpreadsheet = require('google-spreadsheet');
-var async = require('async');
-
 
 // Initialize Discord Bot
 var bot = new Discord.Client({
@@ -137,6 +137,19 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     message: 'Pong!'
                 });
             break;
+			// !osc
+			case 'osc':
+				if(args[0] == '' || !args[0]){
+					bot.sendMessage({
+						to: channelID,
+						message: 'Requires a player name to search. Example: !OSC StarKiller'
+					});
+					break
+				}
+				else{
+					OSCRankingsSearch(1,'',args[0],user,userID,channelID,message,evt,0)
+					break
+				}
 			// !sc2stats
 			case 'sc2stats':
 				if(args[0] == '' || !args[0]){
@@ -153,6 +166,66 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 						SC2ReplayStatsSearch(1,args[0],'','',user, userID, channelID, message, evt,0);
 					break
 				}
+			// !unit
+			case 'unit':
+				if(args[0] != '' || args[0]){
+					LiquipediaUnit(args[0],user, userID, channelID, message, evt,0);
+				}
+				else{
+					bot.sendMessage({
+						to: channelID,
+						message: 'Requires a unit name to search. Example: !unit Zealot'
+					});
+				}
+			break
+			// !hotkeys
+			case 'hotkeys':
+				var MSG = 'https://liquipedia.net/starcraft2/Hotkeys_per_Race';
+				if(args[0] != '' || args[0]){
+					if(args[0].toLowerCase() == 'terran' || args[0].toLowerCase == 't')
+						MSG += '#Terran';
+					else if (args[0].toLowerCase() == 'zerg' || args[0].toLowerCase == 'z')
+						MSG += '#Zerg';
+					else if (args[0].toLowerCase() == 'protoss' || args[0].toLowerCase == 'p' || args[0].toLowerCase() == 'toss')
+						MSG += '#Protoss';
+				}
+				bot.sendMessage({
+					to: channelID,
+					message: MSG
+				});
+				break
+			// !abilities
+			case 'abilities':
+				var MSG = 'https://liquipedia.net/starcraft2/Abilities';
+				if(args[0] != '' || args[0]){
+					if(args[0].toLowerCase() == 'terran' || args[0].toLowerCase == 't')
+						MSG += '#Terran_Abilities';
+					else if (args[0].toLowerCase() == 'zerg' || args[0].toLowerCase == 'z')
+						MSG += '#Zerg_Abilities';
+					else if (args[0].toLowerCase() == 'protoss' || args[0].toLowerCase == 'p' || args[0].toLowerCase() == 'toss')
+						MSG += '#Protoss_Abilities';
+				}
+				bot.sendMessage({
+					to: channelID,
+					message: MSG
+				});
+				break
+			// !spells
+			case 'spells':
+				var MSG = 'https://liquipedia.net/starcraft2/Spells';
+				if(args[0] != '' || args[0]){
+					if(args[0].toLowerCase() == 'terran' || args[0].toLowerCase == 't')
+						MSG += '#Terran_Spells';
+					else if (args[0].toLowerCase() == 'zerg' || args[0].toLowerCase == 'z')
+						MSG += '#Zerg_Spells';
+					else if (args[0].toLowerCase() == 'protoss' || args[0].toLowerCase == 'p' || args[0].toLowerCase() == 'toss')
+						MSG += '#Protoss_Spells';
+				}
+				bot.sendMessage({
+					to: channelID,
+					message: MSG
+				});
+				break
             // !challonge
 			case 'challonge':
 				if (args[0] == '' || !args[0])
@@ -232,6 +305,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 											//console.log(tempPlayerID[i]);
 										}
 											setTimeout(function(){aligulacGroupSeeding(1, allPlayerNames, tempPlayerID, allPlayerIDS, user, userID, channelID, message, evt); console.log(tempPlayerID);},5000);
+									}
+									else if (args[2].toLowerCase() == 'osc'){
+										
+										OSCGroupSeeding(allPlayerNames, user, userID, channelID, message, evt);
 									}
 									else{
 										//console.log(allPlayerNames.length)
